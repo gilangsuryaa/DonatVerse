@@ -1,0 +1,14 @@
+.checkout-container {
+    padding: 150px 20px 80px; /* space enough for fixed navbar */
+    text-align: center;
+    background: #fbf9f6;
+    min-height: 100vh;
+}
+.order-card {
+    background: white;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    transition: transform 0.3s ease;
+}

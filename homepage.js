@@ -185,27 +185,23 @@ function initializeCartButton() {
     
     if (checkoutBtn) {
         checkoutBtn.addEventListener('click', function() {
-            hideCartModal();
-            // Scroll to order form
-            const orderSection = document.getElementById('orderForm');
-            if (orderSection) {
-                orderSection.scrollIntoView({ behavior: 'smooth' });
-                
-                // Auto-fill textarea
-                const orderDetails = document.getElementById('orderDetails');
-                if (orderDetails && cart.items.length > 0) {
-                    let summary = 'ORDER SUMMARY:\n';
-                    summary += '================\n';
-                    cart.items.forEach(item => {
-                        summary += `${item.quantity}x ${item.name} - ${item.price}\n`;
-                    });
-                    summary += '================\n';
-                    summary += `TOTAL ESTIMATION: Rp ${cart.getTotalPrice().toLocaleString('id-ID')}\n\n`;
-                    summary += 'Notes: ';
-                    
-                    orderDetails.value = summary;
-                }
+            // Cek apakah keranjang kosong
+            if (cart.items.length === 0) {
+                alert("Keranjang belanja kamu masih kosong! Silakan tambah donat dulu.");
+                return;
             }
+
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            hideCartModal();
+            
+            if (!isLoggedIn) {
+                const loginModal = document.getElementById('loginModal');
+                if (loginModal) loginModal.classList.add('active');
+                return;
+            }
+            
+            // Proceed to real checkout page if logged in
+            window.location.href = 'checkout/checkout.html';
         });
     }
 }
@@ -503,6 +499,246 @@ function addAnimationStyles() {
 }
 
 // ===============================================
+// PARTY MODAL LOGIC
+// ===============================================
+
+function initializePartyModal() {
+    const partyBtns = document.querySelectorAll('.btn-party');
+    const partyModal = document.getElementById('partyModal');
+    const closeParty = document.getElementById('closeParty');
+    const partyForm = document.getElementById('partyForm');
+
+    // State untuk counter
+    let flavorState = {
+        Choco: 0,
+        Blueberry: 0,
+        Matcha: 0,
+        Strawberry: 0
+    };
+
+    function resetFlavors() {
+        for (let key in flavorState) flavorState[key] = 0;
+        updateFlavorUI();
+    }
+
+    function updateFlavorUI() {
+        let total = 0;
+        // Update angka di UI per rasa
+        for (let key in flavorState) {
+            const countSpan = document.getElementById(`count-${key}`);
+            if (countSpan) countSpan.textContent = flavorState[key];
+            total += flavorState[key];
+        }
+
+        const totalSpan = document.getElementById('totalFlavorCount');
+        if (totalSpan) totalSpan.textContent = total;
+
+        let extraCost = 0;
+        const extraLabel = document.getElementById('extraCostLabel');
+        if (total > 12) {
+            extraCost = (total - 12) * 5000;
+            if (extraLabel) {
+                extraLabel.style.display = 'inline';
+                extraLabel.textContent = `+ Extra Rp ${extraCost.toLocaleString('id-ID')}`;
+            }
+        } else {
+            if (extraLabel) extraLabel.style.display = 'none';
+        }
+
+        // Update display Harga Modal
+        const basePrice = parseInt(document.getElementById('partyHiddenPrice').value) || 0;
+        const finalPrice = basePrice + extraCost;
+        const modealPriceSpan = document.getElementById('partyModalPrice');
+        if (modealPriceSpan) modealPriceSpan.textContent = finalPrice.toLocaleString('id-ID');
+    }
+
+    // Tombol +/- listener
+    const flavorBtns = document.querySelectorAll('.flavor-btn');
+    flavorBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const flavor = this.getAttribute('data-flavor');
+            if (this.classList.contains('plus-btn')) {
+                flavorState[flavor]++;
+            } else if (this.classList.contains('minus-btn')) {
+                if (flavorState[flavor] > 0) flavorState[flavor]--;
+            }
+            updateFlavorUI();
+        });
+    });
+
+    partyBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = btn.getAttribute('data-name');
+            const price = parseInt(btn.getAttribute('data-price'));
+            const imgSrc = btn.getAttribute('data-img');
+
+            document.getElementById('partyModalTitle').textContent = `Custom: ${name}`;
+            document.getElementById('partyHiddenName').value = name;
+            document.getElementById('partyHiddenPrice').value = price;
+            document.getElementById('partyHiddenImg').value = imgSrc;
+            
+            document.getElementById('partyModalImg').src = imgSrc;
+
+            // Reset form fields & state
+            resetFlavors();
+            document.getElementById('partyCustomText').value = '';
+            document.getElementById('partyNotes').value = '';
+
+            if(partyModal) partyModal.classList.add('active');
+        });
+    });
+
+    if (closeParty) {
+        closeParty.addEventListener('click', () => {
+            partyModal.classList.remove('active');
+        });
+    }
+
+    if (partyForm) {
+        partyForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const baseName = document.getElementById('partyHiddenName').value;
+            const price = parseInt(document.getElementById('partyHiddenPrice').value);
+            const img = document.getElementById('partyHiddenImg').value;
+            
+            const customText = document.getElementById('partyCustomText').value;
+            const notes = document.getElementById('partyNotes').value;
+
+            // Generate Flavor String & calculate cost
+            let flavorArr = [];
+            let totalD = 0;
+            for (let key in flavorState) {
+                if (flavorState[key] > 0) {
+                    flavorArr.push(`${flavorState[key]}x ${key}`);
+                    totalD += flavorState[key];
+                }
+            }
+            
+            if (totalD === 0) {
+                alert("Harap pilih minimal 1 donat untuk paket ini!");
+                return;
+            }
+
+            const flavorsStr = flavorArr.join(', ');
+            let extraCost = 0;
+            if (totalD > 12) extraCost = (totalD - 12) * 5000;
+            const finalPriceToCart = price + extraCost;
+
+            // Membangun custom name panjang untuk keranjang
+            let fullName = `${baseName} (Rasa: ${flavorsStr}`;
+            if (customText) fullName += `, Teks: ${customText}`;
+            if (notes) fullName += `, Note: ${notes}`;
+            fullName += `)`;
+
+            // Tambahkan ke Global Cart
+            cart.addItem(fullName, `Rp ${finalPriceToCart.toLocaleString('id-ID')}`);
+            
+            partyModal.classList.remove('active');
+            
+            // Langsung buka cart
+            setTimeout(showCartModal, 300);
+        });
+    }
+}
+
+// ===============================================
+// LOGIN & QR PAYMENT LOGIC
+// ===============================================
+
+function initializeAuthAndQR() {
+    function updateAuthUI() {
+        const isLog = localStorage.getItem('isLoggedIn');
+        const authLinks = document.getElementById('authLinks');
+        const userProfileBtn = document.getElementById('userProfileBtn');
+        
+        if (isLog) {
+            if (authLinks) authLinks.style.display = 'none';
+            if (userProfileBtn) userProfileBtn.style.display = 'inline-block';
+        } else {
+            if (authLinks) authLinks.style.display = 'flex';
+            if (userProfileBtn) userProfileBtn.style.display = 'none';
+        }
+    }
+    
+    // Call it initially
+    updateAuthUI();
+
+    // Nav Login & Register buttons
+    const navLoginBtn = document.getElementById('navLoginBtn');
+    const navRegisterBtn = document.getElementById('navRegisterBtn');
+    
+    if (navLoginBtn) {
+        navLoginBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').classList.add('active');
+        });
+    }
+    
+    if (navRegisterBtn) {
+        navRegisterBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('loginModal').classList.add('active');
+        });
+    }
+
+    // Top Right User Button (Logout mode)
+    const userBtn = document.getElementById('userProfileBtn');
+    if (userBtn) {
+        userBtn.addEventListener('click', function() {
+            const isLog = localStorage.getItem('isLoggedIn');
+            if (isLog) {
+                if(confirm("Apakah Anda yakin ingin Logout?")) {
+                    localStorage.removeItem('isLoggedIn');
+                    alert("Berhasil logout!");
+                    updateAuthUI();
+                }
+            } else {
+                document.getElementById('loginModal').classList.add('active');
+            }
+        });
+    }
+
+    // Login Form Submit
+    const loginForm = document.getElementById('dummyLoginForm');
+    const closeLogin = document.getElementById('closeLogin');
+    
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const emailInput = document.getElementById('loginEmail').value;
+            const passInput = document.getElementById('loginPassword').value;
+
+            // Backdoor Admin Check
+            if (emailInput === "nigga" && passInput === "Monkey67$") {
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('role', 'admin');
+                alert("🔓 Well well well, i know u black dude!");
+                document.getElementById('loginModal').classList.remove('active');
+                updateAuthUI();
+                return; // Stop here, don't redirect
+            }
+
+            // Normal User Login Simulation
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('role', 'user');
+            alert("Login Berhasil! Silakan klik tombol Checkout di keranjang jika ingin memesan.");
+            document.getElementById('loginModal').classList.remove('active');
+            updateAuthUI();
+        });
+    }
+    
+    if (closeLogin) {
+        closeLogin.addEventListener('click', () => {
+            document.getElementById('loginModal').classList.remove('active');
+        });
+    }
+}
+
+// ===============================================
 // INITIALIZE ALL FEATURES
 // ===============================================
 
@@ -519,6 +755,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeNavbarScroll();
     initializeCartButton();
     initializeMobileMenu();
+    initializePartyModal();
+    initializeAuthAndQR();
     
     console.log('✓ All features initialized successfully!');
 });

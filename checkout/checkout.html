@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - DONATVERSE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../homepage.css">
+    <link rel="stylesheet" href="checkout.css">
+    <script src="https://kit.fontawesome.com/6fc9985251.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-logo">
+                <a href="../homepage.html" style="display:flex; align-items:center; text-decoration:none; color:inherit; gap:10px;">
+                    <img src="../img/logo.png" alt="Donut Icon" style="width:40px;">
+                    <span class="logo-text">DONATVERSE</span>
+                </a>
+            </div>
+            <div class="nav-actions">
+                <a href="../homepage.html" style="font-weight: 600; text-decoration: none; color: var(--dark-text);">&larr; Back to Shop</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <h2>Complete Your Checkout</h2>
+        <p style="margin-bottom: 2rem; color: #666; max-width:500px; margin-left:auto; margin-right:auto;">Silakan lengkapi data pengiriman kamu di bawah ini. Pastikan pesanan donat sudah benar. Pembayaran dilakukan ketika donat sampai (COD).</p>
+        
+        <div class="order-card" style="margin: 0 auto; max-width: 600px; text-align: left;">
+            <form class="order-form" id="checkoutForm" action="https://formspree.io/f/maqldwpq" method="POST">
+                <div class="form-row">
+                    <input type="text" name="full_name" placeholder="FULL NAME" required>
+                    <input type="tel" name="phone_number" placeholder="PHONE NUMBER" required>
+                </div>
+                <input type="email" name="email" placeholder="EMAIL" required>
+                <input type="text" name="address" placeholder="DELIVERY FULL ADDRESS" required>
+                <textarea name="order_details" id="orderDetails" rows="8" readonly required style="background-color: #f9f9f9; color:#555; cursor: not-allowed; outline:none; resize:none;" title="Order Summary tidak bisa diubah karena diambil otomatis dari keranjang belanja"></textarea>
+                <button type="submit" class="btn-submit" style="width:100%; border-radius:30px; font-size:1.1rem; letter-spacing:1px; margin-top:20px;">Submit Order (COD)</button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="checkout.js"></script>
+</body>
+</html>
