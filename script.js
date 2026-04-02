@@ -167,6 +167,147 @@ function initializeSmoothScroll() {
 }
 
 // ===============================================
+// CART MODAL & MOBILE MENU LOGIC
+// ===============================================
+
+function initializeCartButton() {
+    const cartBtn = document.getElementById('cartBtn');
+    const closeCart = document.getElementById('closeCart');
+    const checkoutBtn = document.getElementById('checkoutBtn');
+    
+    if (cartBtn) {
+        cartBtn.addEventListener('click', showCartModal);
+    }
+    
+    if (closeCart) {
+        closeCart.addEventListener('click', hideCartModal);
+    }
+    
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function() {
+            hideCartModal();
+            // Scroll to order form
+            const orderSection = document.getElementById('orderForm');
+            if (orderSection) {
+                orderSection.scrollIntoView({ behavior: 'smooth' });
+                
+                // Auto-fill textarea
+                const orderDetails = document.getElementById('orderDetails');
+                if (orderDetails && cart.items.length > 0) {
+                    let summary = 'ORDER SUMMARY:\n';
+                    summary += '================\n';
+                    cart.items.forEach(item => {
+                        summary += `${item.quantity}x ${item.name} - ${item.price}\n`;
+                    });
+                    summary += '================\n';
+                    summary += `TOTAL ESTIMATION: Rp ${cart.getTotalPrice().toLocaleString('id-ID')}\n\n`;
+                    summary += 'Notes: ';
+                    
+                    orderDetails.value = summary;
+                }
+            }
+        });
+    }
+}
+
+function showCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        renderCartItems();
+        modal.classList.add('active');
+    }
+}
+
+function hideCartModal() {
+    const modal = document.getElementById('cartModal');
+    if (modal) {
+        modal.classList.remove('active');
+    }
+}
+
+function renderCartItems() {
+    const container = document.getElementById('cartItemsContainer');
+    const totalPriceEl = document.getElementById('cartTotalPrice');
+    
+    if (!container || !totalPriceEl) return;
+    
+    container.innerHTML = '';
+    
+    if (cart.items.length === 0) {
+        container.innerHTML = '<div class="empty-cart-msg">Keranjang belanja Anda masih kosong.</div>';
+    } else {
+        cart.items.forEach((item) => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'cart-item';
+            itemEl.innerHTML = `
+                <div class="cart-item-info">
+                    <div class="cart-item-name">${item.name}</div>
+                    <div class="cart-item-price">${item.price}</div>
+                </div>
+                <div class="cart-item-controls">
+                    <button class="qty-btn" onclick="updateItemQuantity('${item.name}', -1)">-</button>
+                    <span>${item.quantity}</span>
+                    <button class="qty-btn" onclick="updateItemQuantity('${item.name}', 1)">+</button>
+                    <button class="remove-btn" onclick="removeCartItem('${item.name}')"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+            container.appendChild(itemEl);
+        });
+    }
+    
+    totalPriceEl.textContent = `Rp ${cart.getTotalPrice().toLocaleString('id-ID')}`;
+}
+
+window.updateItemQuantity = function(name, change) {
+    const item = cart.items.find(i => i.name === name);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            cart.removeItem(name);
+        } else {
+            cart.saveToStorage();
+            cart.updateCartCount();
+        }
+        renderCartItems();
+    }
+};
+
+window.removeCartItem = function(name) {
+    cart.removeItem(name);
+    renderCartItems();
+};
+
+function initializeMobileMenu() {
+    const mobileBtn = document.getElementById('mobileMenuBtn');
+    const navMenu = document.getElementById('navMenu');
+    
+    if (mobileBtn && navMenu) {
+        mobileBtn.addEventListener('click', function() {
+            navMenu.classList.toggle('active');
+            
+            const icon = this.querySelector('i');
+            if (navMenu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-xmark');
+            } else {
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        const navLinks = navMenu.querySelectorAll('a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                navMenu.classList.remove('active');
+                const icon = mobileBtn.querySelector('i');
+                icon.classList.remove('fa-xmark');
+                icon.classList.add('fa-bars');
+            });
+        });
+    }
+}
+
+// ===============================================
 // ORDER FORM HANDLING
 // ===============================================
 
@@ -175,81 +316,15 @@ function initializeOrderForm() {
     
     if (orderForm) {
         orderForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(orderForm);
-            const formValues = {};
-            
-            // Collect all form values
-            for (let [key, value] of formData.entries()) {
-                formValues[key] = value;
-            }
-            
-            // Show success message
-            showOrderSuccess();
-            
-            // Reset form
-            orderForm.reset();
-            
-            // Log order (in real app, this would send to server)
-            console.log('Order submitted:', formValues);
-            console.log('Cart items:', cart.items);
+            // Formspree akan menangani pengiriman.
+            // Bersihkan keranjang ketika form di-submit.
+            setTimeout(() => {
+                cart.items = [];
+                cart.saveToStorage();
+                cart.updateCartCount();
+            }, 1000);
         });
     }
-}
-
-function showOrderSuccess() {
-    // Create modal overlay
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-        animation: fadeIn 0.3s ease-out;
-    `;
-    
-    // Create modal content
-    const modalContent = document.createElement('div');
-    modalContent.style.cssText = `
-        background: white;
-        padding: 40px;
-        border-radius: 20px;
-        text-align: center;
-        max-width: 500px;
-        animation: scaleIn 0.3s ease-out;
-    `;
-    
-    modalContent.innerHTML = `
-        <div style="font-size: 4rem; margin-bottom: 20px;">✓</div>
-        <h2 style="color: #28a745; margin-bottom: 15px;">Pesanan Berhasil!</h2>
-        <p style="color: #666; margin-bottom: 25px;">
-            Terima kasih telah memesan. Kami akan segera menghubungi Anda untuk konfirmasi.
-        </p>
-        <button onclick="this.closest('div').parentElement.remove()" 
-                style="background: #dc143c; color: white; border: none; 
-                       padding: 12px 30px; border-radius: 25px; 
-                       cursor: pointer; font-weight: 600;">
-            Tutup
-        </button>
-    `;
-    
-    modal.appendChild(modalContent);
-    document.body.appendChild(modal);
-    
-    // Close on background click
-    modal.addEventListener('click', function(e) {
-        if (e.target === modal) {
-            modal.remove();
-        }
-    });
 }
 
 // ===============================================
@@ -443,6 +518,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeScrollAnimations();
     initializeNavbarScroll();
     initializeCartButton();
+    initializeMobileMenu();
     
     console.log('✓ All features initialized successfully!');
 });
@@ -453,6 +529,5 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.DonutShop = {
     cart: cart,
-    showCartModal: showCartModal,
-    showOrderSuccess: showOrderSuccess
+    showCartModal: showCartModal
 };

@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DONATVERSE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <script src="https://kit.fontawesome.com/6fc9985251.js" crossorigin="anonymous"></script>
 </head>
@@ -15,12 +18,21 @@
                 <img src="img/logo.png" alt="Donut Icon">
                 <span class="logo-text">DONATVERSE</span>
             </div>
-            <ul class="nav-menu">
+            <ul class="nav-menu" id="navMenu">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#menu">Menu</a></li>
                 <li><a href="#breadmaking">Breadmaking</a></li>
                 <li><a href="#party">Party</a></li>
             </ul>
+            <div class="nav-actions">
+                <button class="btn-icon cart-btn" id="cartBtn">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="btn-icon mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -189,14 +201,14 @@
             <div class="order-card">
                 <div class="order-icon"><i class="fa-solid fa-bag-shopping"></i></div>
                 <h2>Place Your Order</h2>
-                <form class="order-form" id="orderForm">
+                <form class="order-form" id="orderForm" action="https://formspree.io/f/maqldwpq" method="POST">
                     <div class="form-row">
-                        <input type="text" placeholder="FULL NAME" required>
-                        <input type="tel" placeholder="PHONE NUMBER" required>
+                        <input type="text" name="full_name" placeholder="FULL NAME" required>
+                        <input type="tel" name="phone_number" placeholder="PHONE NUMBER" required>
                     </div>
-                    <input type="email" placeholder="EMAIL" required>
-                    <input type="text" placeholder="DELIVERY ADDRESS" required>
-                    <textarea placeholder="SELECT YOUR DONUT PACK" rows="4" required></textarea>
+                    <input type="email" name="email" placeholder="EMAIL" required>
+                    <input type="text" name="address" placeholder="DELIVERY ADDRESS" required>
+                    <textarea name="order_details" id="orderDetails" placeholder="YOUR ORDER DETAILS (Will be auto-filled from Cart)" rows="4" required></textarea>
                     <button type="submit" class="btn-submit">Submit Order Now</button>
                 </form>
             </div>
@@ -208,6 +220,13 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
+                    <div class="footer-logo">
+                        <img src="img/logo.png" alt="Donut Icon">
+                        <span>DONATVERSE</span>
+                    </div>
+                    <p>Membawa kebahagiaan dan kehangatan lewat donat buatan tangan setiap hari langsung dari dapur kami.</p>
+                </div>
+                <div class="footer-column">
                     <h4>EXPLORE LINKS</h4>
                     <ul>
                         <li><a href="#home">Home</a></li>
@@ -218,15 +237,45 @@
                 </div>
                 <div class="footer-column">
                     <h4>REACH US</h4>
-                    <p><i class="fa-solid fa-location-dot"></i> Jl. Donat Manis No.123<br>Jakarta, Indonesia</p>
-                    <p><i class="fa-solid fa-phone"></i> +62 21 1234 5678</p>
+                    <p><i class="fa-solid fa-location-dot"></i> Perum Jl. Permata Harmoni No.5 Blok B2, Ledug Lor, Ledug, Kec. Kembaran, Kab. Banyumas, Jawa Tengah 53182<br>Purwokerto, Indonesia</p>
+                    <p><i class="fa-solid fa-phone"></i> +62 813-9155-9595</p>
+                    <p><i class="fa-solid fa-envelope"></i> hello@donatverse.com</p>
+                    <p><i class="fa-solid fa-clock"></i> Buka Setiap Hari (08.00 - 22.00)</p>
+                </div>
+                <div class="footer-column">
+                    <h4>NEWSLETTER</h4>
+                    <p>Subscribe for our latest promos!</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your Email" required>
+                        <button type="submit"><i class="fa-solid fa-arrow-right"></i></button>
+                    </form>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 DONATVERSE. All rights reserved. | Privacy Policy | Terms of Service</p>
+                <p>&copy; 2024 DONATVERSE. All rights reserved. | Privacy Policy | Terms of Service</p>
             </div>
         </div>
     </footer>
+
+    <!-- Cart Modal -->
+    <div class="cart-modal" id="cartModal">
+        <div class="cart-modal-content">
+            <div class="cart-header">
+                <h2>Keranjang Belanja</h2>
+                <button class="close-cart" id="closeCart">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItemsContainer">
+                <!-- Cart items will be rendered here via JS -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total Keseluruhan:</span>
+                    <span id="cartTotalPrice">Rp 0</span>
+                </div>
+                <button class="btn-primary btn-checkout" id="checkoutBtn">Checkout Pesanan</button>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
