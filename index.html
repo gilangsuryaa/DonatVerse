@@ -103,34 +103,132 @@
             <div class="section-header">
                 <div>
                     <p class="section-subtitle">PRODUCT SELECTION</p>
-                    <h2 class="section-title">Frequent faves</h2>
+                    <h2 class="section-title">Pilih Varian Donatmu</h2>
                 </div>
-                <a href="#" class="view-all">View All Items →</a>
             </div>
+
+            <!-- Box Ready Banner -->
+            <div class="box-ready-banner">
+                <i class="fa-solid fa-box-open"></i>
+                <span><strong>Ready!</strong> Tersedia 4 Box (isi 6 pcs) — Siap topping, pilih rasa, monggo!</span>
+            </div>
+
+            <!-- Order Type Toggle -->
+            <div class="order-type-toggle">
+                <button class="order-type-btn active" id="btnSatuan" onclick="setOrderType('satuan')">
+                    <i class="fa-solid fa-cookie-bite"></i> Satuan (per pcs)
+                </button>
+                <button class="order-type-btn" id="btnBox" onclick="setOrderType('box')">
+                    <i class="fa-solid fa-box"></i> Box (isi 6 pcs)
+                </button>
+            </div>
+            <p class="order-type-info" id="orderTypeInfo">Harga satuan per donat. Bisa campuran rasa!</p>
+
             <div class="product-grid">
+                <!-- Choco -->
                 <div class="product-card">
                     <div class="product-badge">Best Seller</div>
                     <img src="img/choco.png" alt="Choco Donut">
                     <h3 class="product-name">Choco Donut</h3>
-                    <p class="product-price">Rp 25,000</p>
+                    <p class="product-desc">Mesis, kacang, atau polos</p>
+                    <p class="product-price" data-satuan="25000" data-box="140000">Rp 25,000</p>
                     <button class="btn-cart">ADD TO CART</button>
                 </div>
-                <div class="product-card">
-                    <img src="img/blueberry.png" alt="Blueberry Donut">
-                    <h3 class="product-name">Blueberry Donut</h3>
-                    <p class="product-price">Rp 23,000</p>
-                    <button class="btn-cart">ADD TO CART</button>
-                </div>
-                <div class="product-card">
-                    <img src="img/matcha.png" alt="Matcha Donut">
-                    <h3 class="product-name">Matcha Donut</h3>
-                    <p class="product-price">Rp 26,000</p>
-                    <button class="btn-cart">ADD TO CART</button>
-                </div>
+                <!-- Strawberry -->
                 <div class="product-card">
                     <img src="img/strawberry.png" alt="Strawberry Donut">
                     <h3 class="product-name">Strawberry Donut</h3>
-                    <p class="product-price">Rp 24,000</p>
+                    <p class="product-desc">Manis segar rasa buah</p>
+                    <p class="product-price" data-satuan="24000" data-box="136000">Rp 24,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Vanilla -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/vanilla.png" alt="Vanilla Donut">
+                    <h3 class="product-name">Vanilla Donut</h3>
+                    <p class="product-desc">Lembut manis klasik</p>
+                    <p class="product-price" data-satuan="24000" data-box="136000">Rp 24,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+
+                <!-- Tiramisu -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/tiramisu.png" alt="Tiramisu Donut">
+                    <h3 class="product-name">Tiramisu Donut</h3>
+                    <p class="product-desc">Coffee cream premium</p>
+                    <p class="product-price" data-satuan="27000" data-box="154000">Rp 27,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Keju -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/keju.png" alt="Keju Donut">
+                    <h3 class="product-name">Keju Donut</h3>
+                    <p class="product-desc">Keju cheddar leleh gurih</p>
+                    <p class="product-price" data-satuan="25000" data-box="140000">Rp 25,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Taro -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/taro.png" alt="Taro Donut">
+                    <h3 class="product-name">Taro Donut</h3>
+                    <p class="product-desc">Ungu cantik rasa talas</p>
+                    <p class="product-price" data-satuan="26000" data-box="148000">Rp 26,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Oreo -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/oreo.png" alt="Oreo Donut">
+                    <h3 class="product-name">Oreo Donut</h3>
+                    <p class="product-desc">Cookies & cream favorit</p>
+                    <p class="product-price" data-satuan="26000" data-box="148000">Rp 26,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Capucino -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/capucino.png" alt="Capucino Donut">
+                    <h3 class="product-name">Capucino Donut</h3>
+                    <p class="product-desc">Aroma kopi yang menggoda</p>
+                    <p class="product-price" data-satuan="27000" data-box="154000">Rp 27,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Donsis -->
+                <div class="product-card">
+                    <div class="product-badge">Favorit</div>
+                    <img src="img/donsis.png" alt="Donsis">
+                    <h3 class="product-name">Donsis</h3>
+                    <p class="product-desc">Donat isi krim susu lembut</p>
+                    <p class="product-price" data-satuan="25000" data-box="140000">Rp 25,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Donat Buah -->
+                <div class="product-card">
+                    <div class="product-badge new-badge">New</div>
+                    <img src="img/buah.png" alt="Donat Buah">
+                    <h3 class="product-name">Donat Buah</h3>
+                    <p class="product-desc">Topping buah segar berwarna</p>
+                    <p class="product-price" data-satuan="28000" data-box="160000">Rp 28,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Matcha -->
+                <div class="product-card">
+                    <img src="img/greentea.png" alt="Matcha Donut">
+                    <h3 class="product-name">Matcha Donut</h3>
+                    <p class="product-desc">Bubuk matcha premium</p>
+                    <p class="product-price" data-satuan="26000" data-box="148000">Rp 26,000</p>
+                    <button class="btn-cart">ADD TO CART</button>
+                </div>
+                <!-- Blueberry (existing) -->
+                <div class="product-card">
+                    <img src="img/blueberry.png" alt="Blueberry Donut">
+                    <h3 class="product-name">Blueberry Donut</h3>
+                    <p class="product-desc">Selai blueberry asli</p>
+                    <p class="product-price" data-satuan="23000" data-box="132000">Rp 23,000</p>
                     <button class="btn-cart">ADD TO CART</button>
                 </div>
             </div>

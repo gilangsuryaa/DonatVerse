@@ -408,6 +408,10 @@ body {
     font-weight: 600;
 }
 
+.new-badge {
+    background: #28a745;
+}
+
 .product-card img {
     width: 100%;
     max-width: 150px;
@@ -415,13 +419,22 @@ body {
 }
 
 .product-name {
-    font-size: 1.2rem;
-    margin-bottom: var(--spacing-xs);
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 4px;
     color: var(--dark-text);
 }
 
+.product-desc {
+    font-size: 0.82rem;
+    color: var(--light-text);
+    margin-bottom: var(--spacing-xs);
+    font-style: italic;
+    line-height: 1.4;
+}
+
 .product-price {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--primary-color);
     font-weight: bold;
     margin-bottom: var(--spacing-sm);
@@ -437,11 +450,77 @@ body {
     font-weight: 600;
     width: 100%;
     transition: all 0.3s ease;
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
 }
 
 .btn-cart:hover {
     background: #b01030;
     transform: scale(1.05);
+}
+
+/* Box Ready Banner */
+.box-ready-banner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #fff3cd, #ffe69c);
+    border: 1.5px solid #ffc107;
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+    color: #7d5a00;
+    box-shadow: 0 2px 8px rgba(255, 193, 7, 0.25);
+}
+
+.box-ready-banner i {
+    font-size: 1.4rem;
+    color: #e6a800;
+    flex-shrink: 0;
+}
+
+/* Order Type Toggle */
+.order-type-toggle {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.order-type-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    border-radius: 25px;
+    border: 2px solid #ddd;
+    background: white;
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--light-text);
+    transition: all 0.25s ease;
+}
+
+.order-type-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.order-type-btn.active {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.order-type-info {
+    font-size: 0.85rem;
+    color: var(--light-text);
+    margin-bottom: 1.5rem;
+    font-style: italic;
 }
 
 .story-section {

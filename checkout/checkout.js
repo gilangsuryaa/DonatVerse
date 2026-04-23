@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const isLoggedIn = localStorage.getItem('isLoggedIn');
     if (!isLoggedIn) {
         alert('Anda belum login!');
-        window.location.href = '../homepage.html';
+        window.location.href = '../index.html';
         return;
     }
 
@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const cartData = JSON.parse(localStorage.getItem('donutCart')) || [];
     if (cartData.length === 0) {
         alert('Keranjang belanjamu kosong! Silakan pilih donat terlebih dahulu.');
-        window.location.href = '../homepage.html';
+        window.location.href = '../index.html';
         return;
     }
 
